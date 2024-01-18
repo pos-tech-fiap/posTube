@@ -2,6 +2,7 @@ package com.fiap.posTube.service;
 
 import com.fiap.posTube.repository.UserRepository;
 import com.fiap.posTube.repository.VideoRepository;
+import com.fiap.posTube.useCase.DTO.UserDTO;
 import com.fiap.posTube.useCase.DTO.VideoDTO;
 import com.fiap.posTube.useCase.entity.Category;
 import com.fiap.posTube.useCase.entity.FavoriteVideos;
@@ -38,12 +39,14 @@ public class UserServiceTest {
 
     @Test
     void ShouldSaveUser() {
-        User user = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User user = new User(userdto.name());
         user.setId("65a00f64b8c2c36b231e4903");
 
-        Mockito.when(userRepository.save(user)).thenReturn(Mono.just(user));
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(Mono.just(user));
 
-        Mono<User> savedUserMono = userService.saveUser(user);
+
+        Mono<User> savedUserMono = userService.saveUser(userdto.name());
 
         User savedUser = savedUserMono.block();
 
@@ -54,7 +57,8 @@ public class UserServiceTest {
 
     @Test
     void ShouldGetUserById() {
-        User user = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User user = new User(userdto.name());
         user.setId("65a00f64b8c2c36b231e4903");
 
         Mockito.when(userRepository.getById(user.getId())).thenReturn(Mono.just(Optional.of(user)));
@@ -70,7 +74,8 @@ public class UserServiceTest {
     @Test
     void ShouldSaveFavorite() {
 
-        User user = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User user = new User(userdto.name());
         user.setId("65a00f64b8c2c36b231e4903");
 
         VideoDTO videoDTO = new VideoDTO("Video Title", "Video Description", "https://www.youtube.com/watch?v=b2TFUr5MR2E&list=PL8iIphQOyG-CyD9uuRTMiqxEut5QAKHga&index=6", Category.COMEDIA);
@@ -94,7 +99,8 @@ public class UserServiceTest {
 
     @Test
     void ShouldGetRecommendedVideosById() {
-        User user = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User user = new User(userdto.name());
         user.setId("65a00f64b8c2c36b231e4903");
 
         VideoDTO videoDTO = new VideoDTO("Video Title", "Video Description", "https://www.youtube.com/watch?v=b2TFUr5MR2E&list=PL8iIphQOyG-CyD9uuRTMiqxEut5QAKHga&index=6", Category.COMEDIA);

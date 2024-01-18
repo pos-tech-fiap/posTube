@@ -1,11 +1,12 @@
 package com.fiap.posTube.controller;
 
+import com.fiap.posTube.service.UserService;
+import com.fiap.posTube.service.VideoService;
+import com.fiap.posTube.useCase.DTO.UserDTO;
 import com.fiap.posTube.useCase.DTO.VideoDTO;
 import com.fiap.posTube.useCase.entity.FavoriteVideos;
 import com.fiap.posTube.useCase.entity.User;
 import com.fiap.posTube.useCase.entity.Video;
-import com.fiap.posTube.service.UserService;
-import com.fiap.posTube.service.VideoService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,14 +33,15 @@ public class UserControllerTest {
 
     @Test
     void ShouldSaveNewUser() {
-        User userToSaveReq = new User( "John Doe");
-        User userToSave = new User( "John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User userToSaveReq = new User(userdto.name());
+        User userToSave = new User(userdto.name());
         userToSave.setId("65a00f64b8c2c36b231e4903");
         FavoriteVideos favoriteVideos = new FavoriteVideos("65a00f64b8c2c36b231e4903");
         userToSave.setId("65a00f64b8c2c36b231e4903");
         userToSave.addFavorites(favoriteVideos);
 
-        Mockito.when(userService.saveUser(userToSave)).thenReturn(Mono.just(userToSave));
+        Mockito.when(userService.saveUser(userdto.name())).thenReturn(Mono.just(userToSave));
 
         webTestClient.post().uri("/users/user")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -51,22 +53,25 @@ public class UserControllerTest {
 
     @Test
     void ShouldGetUserById() {
-        User userToSaveReq = new User("John Doe");
-        User userToSave = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User userToSaveReq = new User(userdto.name());
+        User userToSave = new User(userdto.name());
         userToSave.setId("65a00f64b8c2c36b231e4903");
         userToSave.addFavorites(null);
 
-        Mockito.when(userService.saveUser(userToSaveReq)).thenReturn(Mono.just(userToSave));
+        Mockito.when(userService.saveUser(userdto.name())).thenReturn(Mono.just(userToSave));
         webTestClient.get().uri("/users/{id}", userToSave.getId())
                 .exchange()
                 .expectBody()
                 .returnResult()
                 .getResponseBody();
     }
+
     @Test
     void ShouldSaveFavorite() {
-        User userToSaveReq = new User("John Doe");
-        User userToSave = new User("John Doe");
+        UserDTO userdto = new UserDTO("John Doe");
+        User userToSaveReq = new User(userdto.name());
+        User userToSave = new User(userdto.name());
         FavoriteVideos favoriteVideos = new FavoriteVideos("65a00f64b8c2c36b231e4903");
         userToSave.setId("65a00f64b8c2c36b231e4903");
         userToSave.addFavorites(favoriteVideos);
@@ -81,8 +86,9 @@ public class UserControllerTest {
 
     @Test
     void ShouldRecommendedVideosNew() {
-        User user = new User( "John Doe");
-        VideoDTO videoDTO = new VideoDTO( "William teste", "Nesse vídeo utilizamos .","https://www.youtube.com/watch?v=TpYFd2uAd4M", COMEDIA);
+        UserDTO userdto = new UserDTO("John Doe");
+        User user = new User(userdto.name());
+        VideoDTO videoDTO = new VideoDTO("William teste", "Nesse vídeo utilizamos .", "https://www.youtube.com/watch?v=TpYFd2uAd4M", COMEDIA);
         Video recommendedVideo = new Video(videoDTO);
 
         Mockito.when(userService.getRecommendedVideosById(user.getId())).thenReturn(Mono.just(recommendedVideo));

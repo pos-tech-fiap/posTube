@@ -1,5 +1,6 @@
 package com.fiap.posTube.useCase.entity;
 
+import com.fiap.posTube.useCase.DTO.UserDTO;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +15,6 @@ public class User {
     private List<FavoriteVideos> favorites;
 
     public User(String name) {
-
         this.name = name;
         this.favorites = new ArrayList<>();
     }

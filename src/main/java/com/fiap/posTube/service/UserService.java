@@ -1,10 +1,11 @@
 package com.fiap.posTube.service;
 
+import com.fiap.posTube.repository.UserRepository;
+import com.fiap.posTube.repository.VideoRepository;
+import com.fiap.posTube.useCase.DTO.UserDTO;
 import com.fiap.posTube.useCase.entity.FavoriteVideos;
 import com.fiap.posTube.useCase.entity.User;
 import com.fiap.posTube.useCase.entity.Video;
-import com.fiap.posTube.repository.UserRepository;
-import com.fiap.posTube.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -16,7 +17,8 @@ public class UserService {
     @Autowired
     VideoRepository videoRepository;
 
-    public Mono<User> saveUser(User user) {
+    public Mono<User> saveUser(String userDTO) {
+        User user = new User(userDTO);
         return userRepository.save(user).onErrorMap(e -> new RuntimeException("Failed to save video", e));
     }
 

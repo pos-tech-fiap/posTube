@@ -1,5 +1,6 @@
 package com.fiap.posTube.repository;
 
+
 import com.fiap.posTube.useCase.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

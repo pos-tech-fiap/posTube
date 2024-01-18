@@ -1,9 +1,11 @@
 package com.fiap.posTube.controller;
 
-import com.fiap.posTube.useCase.entity.User;
-import com.fiap.posTube.useCase.entity.Video;
+
 import com.fiap.posTube.service.UserService;
 import com.fiap.posTube.service.VideoService;
+import com.fiap.posTube.useCase.DTO.UserDTO;
+import com.fiap.posTube.useCase.entity.User;
+import com.fiap.posTube.useCase.entity.Video;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+
 
 @RequestMapping("/users")
 @RestController
@@ -23,8 +26,8 @@ public class UserController {
     private VideoService videoService;
 
     @PostMapping("/user")
-    public Mono<ResponseEntity<User>> save(@RequestBody @Valid User user) {
-        return userService.saveUser(user)
+    public Mono<ResponseEntity<User>> save(@RequestBody @Valid UserDTO user) {
+        return userService.saveUser(user.name())
                 .map(savedUser -> ResponseEntity.status(HttpStatus.CREATED).body(savedUser));
     }
 
