@@ -48,7 +48,7 @@ public class VideoService {
     }
 
     public Mono<Void> deleteVideo(String videoId) {
-        return Mono.fromRunnable(() -> videoRepository.deleteById(videoId));
+        return videoRepository.deleteById(videoId).then();
     }
 
     public Flux<Video> listByCategory(Category category) {
