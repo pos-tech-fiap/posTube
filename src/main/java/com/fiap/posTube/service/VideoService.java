@@ -24,7 +24,8 @@ public class VideoService {
     }
 
     public Mono<Video> getVideoById(String videoId) {
-        return videoRepository.getById(videoId).switchIfEmpty(Mono.error(new RuntimeException("Video not found with ID: " + videoId))).flatMap(video -> Mono.justOrEmpty(video.orElse(null)));
+        Mono<Video> videoFound = videoRepository.getById(videoId).switchIfEmpty(Mono.error(new RuntimeException("Video not found with ID: " + videoId))).flatMap(video -> Mono.justOrEmpty(video.orElse(null)));
+        return videoFound.flatMap(this::updateViews);
     }
 
     public Mono<Video> updateVideo(VideoDTO videoDTO, String videoId) {
@@ -39,8 +40,7 @@ public class VideoService {
     }
 
     public Flux<Video> getAllVideos() {
-        System.out.println("Fetching all videos from the database");
-        return videoRepository.getAll().doOnNext(video -> System.out.println());
+        return videoRepository.getAll();
     }
 
     public Mono<Page<Video>> findAllVideos(Pageable pageable) {
@@ -53,5 +53,12 @@ public class VideoService {
 
     public Flux<Video> listByCategory(Category category) {
         return videoRepository.listByCategory(category);
+    }
+
+    private Mono<Video> updateViews(Video video) {
+        video.setViews(video.getViews() + 1);
+        return videoRepository.save(video)
+                .onErrorMap(e -> new RuntimeException("Failed to update views", e))
+                .thenReturn(video);
     }
 }

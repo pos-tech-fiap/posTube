@@ -15,6 +15,7 @@ public class Video {
     private String urlVideo;
     private LocalDateTime publicationDate;
     private Category category;
+    private Integer views;
 
     public Video() {
     }
@@ -24,6 +25,7 @@ public class Video {
         this.description = videoDTO.description();
         this.urlVideo = videoDTO.urlVideo();
         this.category = videoDTO.category();
+        this.views = 0;
     }
 
     public String getId() {
@@ -72,6 +74,14 @@ public class Video {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Integer getViews() {
+        return views;
+    }
+
+    public void setViews(Integer views) {
+        this.views = views;
     }
 }
 
