@@ -24,6 +24,7 @@ public class UserRepository {
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found")));
     }
     public Mono<Long> getTotalFavoritesCount() {
-        return userRepository.countFavoritesByFavoritesVideoIdIsNotNull();
+        return userRepository.countFavoritesByFavoritesVideoIdIsNotNull()
+                .switchIfEmpty(Mono.just(0L));
     }
 }
