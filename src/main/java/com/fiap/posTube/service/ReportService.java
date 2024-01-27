@@ -14,12 +14,9 @@ public class ReportService {
     private  UserService userService;
 
     public Mono<ReportDTO> getReport() {
-        return Mono.zip(
-                videoService.getAllVideos().count(),
-                userService.getTotalFavoritesCount(),
-                (totalDeVideos, totalFavoritesVideo) -> {
-                    var averageViews = 10;
-                    return new ReportDTO(totalDeVideos, totalFavoritesVideo, averageViews);
-                });
+        return Mono.zip(videoService.getAllVideos().count(),
+                        userService.getTotalFavoritesCount(),
+                        videoService.getAverageViews())
+                .map(zipMono -> new ReportDTO(zipMono.getT1(), zipMono.getT2(), zipMono.getT3()));
     }
 }

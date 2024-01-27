@@ -43,6 +43,16 @@ public class VideoService {
         return videoRepository.getAll();
     }
 
+    public Mono<Double> getAverageViews() {
+        return videoRepository.getAll().collectList().map(videos -> {
+            Double totalViews = 0.0;
+            for (Video video : videos) {
+                totalViews += video.getViews();
+            }
+            return totalViews / videos.size();
+        });
+    }
+
     public Mono<Page<Video>> findAllVideos(Pageable pageable) {
         return videoRepository.findAllBy(pageable);
     }
