@@ -46,6 +46,8 @@ public class VideoService {
     public Mono<Double> getAverageViews() {
         return videoRepository.getAll().collectList().map(videos -> {
             Double totalViews = 0.0;
+            if (videos.isEmpty()) return totalViews;
+
             for (Video video : videos) {
                 totalViews += video.getViews();
             }
